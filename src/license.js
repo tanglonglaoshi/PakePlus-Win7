@@ -20,6 +20,41 @@ const AUTH_FILE  = 'auth.json';
 const TOKEN_DAYS = 29;
 const GRACE_DAYS = 180;                /* 离线宽限天数：token 过期后，最近这么久内验证过就允许离线 */
 
+
+/* ===== 1b. 基础工具：auth.json 签名 ===== */
+/* 换成只有你自己知道的 64 位随机 hex。注意：一旦定下来不要再改，
+   改了以后旧的 auth.json 全部验签失败，等同"清除激活记录"。 */
+const SECRET = 'f3a9c2e1d84b7065a1c8e2f9d4b36807a2c5e9f1b4d76082c3a1e5f9b2d6480c';
+
+/**
+ * HMAC-SHA256 签名（十六进制输出）
+ * 依赖 Web Crypto API：Tauri 应用 / https / localhost 均可用
+ * @param {string} key      密钥
+ * @param {string} message  待签名文本
+ * @returns {Promise<string>}
+ */
+async function hmacSha256(key, message) {
+  if (!window.crypto || !window.crypto.subtle) {
+    throw new Error('当前环境不支持 Web Crypto（crypto.subtle），无法计算 HMAC 签名。请使用 Tauri 桌面版，或通过 https / localhost 打开页面。');
+  }
+  const enc = new TextEncoder();
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    enc.encode(key),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', cryptoKey, enc.encode(message));
+  const bytes = new Uint8Array(sig);
+  let hex = '';
+  for (let i = 0; i < bytes.length; i++) {
+    hex += bytes[i].toString(16).padStart(2, '0');
+  }
+  return hex;
+}
+
+
 /* ===== 2. Tauri 环境下的文件读写（exe 同级目录） ===== */
 
 let __appDirCache = null;       // null = 未解析；'' = 浏览器环境；string = 已解析路径
@@ -162,13 +197,19 @@ function uuid() {
   return 'dev-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
 }
 
+async function writeAuth(a) {
+  const body = JSON.stringify(a);
+  const mac = await hmacSha256(SECRET, body); // SECRET 硬编码
+  await writeFile(AUTH_FILE, JSON.stringify({ body, mac }));
+}
 async function readAuth() {
   const text = await readFile(AUTH_FILE);
   if (!text) return null;
-  try { return JSON.parse(text); } catch (e) { return null; }
-}
-async function writeAuth(a) {
-  await writeFile(AUTH_FILE, JSON.stringify(a, null, 2));
+  try {
+    const { body, mac } = JSON.parse(text);
+    if (await hmacSha256(SECRET, body) !== mac) return null; // 被篡改
+    return JSON.parse(body);
+  } catch (e) { return null; }
 }
 
 /* ---- 归一化服务端返回的 expiresAt（兼容数字 / ISO 字符串 / null） ---- */
@@ -598,7 +639,7 @@ function showActivationUI(message) {
 }
 
 /* ===== 8. 对外接口 ===== */
-window.__pbLicense = {
+const licenseAPI = {
   API_BASE: API_BASE,
   ensureActivated: ensureActivated,
   getToken: getToken,
@@ -608,6 +649,13 @@ window.__pbLicense = {
   check: async function () { return !!(await readAuth()); },
   showActivationUI: function (msg) { return showActivationUI(msg); }
 };
+
+// 【修补】防止控制台直接覆盖或删除该对象
+Object.defineProperty(window, '__pbLicense', {
+  value: licenseAPI,
+  writable: false,
+  configurable: false
+});
 
 /* 把文件读写暴露给 app.js 复用 */
 window.__pbFS = {
