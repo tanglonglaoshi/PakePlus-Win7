@@ -19,17 +19,17 @@
     --shadow:0 12px 40px rgba(0,8,24,.55),0 1px 0 rgba(255,255,255,.05) inset;
   }
   *{box-sizing:border-box;}
-  html,body{
-    height:100%;
-    margin:0;
-    overflow:hidden;
-    background:transparent;
-  }
+  html,body{height:100%;margin:0;overflow:hidden;}
   body{
     font-family:system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
     color:var(--text);
     -webkit-user-select:none;user-select:none;
     -webkit-tap-highlight-color:transparent;
+    background:
+      radial-gradient(ellipse 120% 80% at 15% -10%, rgba(56,189,248,.22), transparent 55%),
+      radial-gradient(ellipse 100% 80% at 90% 110%, rgba(129,140,248,.20), transparent 55%),
+      radial-gradient(ellipse 90% 60% at 50% 50%, rgba(14,32,64,.65), transparent 70%),
+      linear-gradient(160deg, #060c18 0%, #0a1428 45%, #0b1020 100%);
     background-attachment:fixed;
     transition:background .5s;
   }
@@ -1399,17 +1399,6 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     <span>菜单</span>
   </button>
-  <button class="mini-btn with-text" id="randomSkinBtn" title="一键换肤：在内置背景间循环切换">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="3"/>
-      <circle cx="8" cy="8" r="1.4" fill="currentColor"/>
-      <circle cx="16" cy="8" r="1.4" fill="currentColor"/>
-      <circle cx="8" cy="16" r="1.4" fill="currentColor"/>
-      <circle cx="16" cy="16" r="1.4" fill="currentColor"/>
-      <circle cx="12" cy="12" r="1.4" fill="currentColor"/>
-    </svg>
-    <span>换肤</span>
-  </button>
 </div>
 
 <div class="menu-pop" id="menuPop">
@@ -1561,42 +1550,8 @@
   <div class="modal-card">
     <div class="modal-head">设置</div>
     <div class="modal-body">
-<p style="font-size:12px;color:#8fa3c0;margin-bottom:12px;">画布背景</p>
-<div style="display:flex;gap:8px;margin-bottom:12px;">
-  <button class="mbtn ghost" id="customBgToggleBtn" style="width:100%;height:42px;font-size:13.5px;">🖼 自定义背景</button>
-</div>
-<div class="bg-row" id="bgRow"></div>
-
-<div id="customBgPanel" style="display:none;margin-top:16px;padding:14px;background:rgba(120,180,255,.05);border:1px solid rgba(120,180,255,.16);border-radius:12px;">
-  <div class="pblock">
-    <div class="plabel">上传本地图片</div>
-    <button class="mbtn ghost" id="uploadBgImgBtn" style="width:100%;height:42px;font-size:13px;">📷 选择图片作为背景</button>
-    <input type="file" id="bgImgInput" accept="image/*" style="display:none;">
-  </div>
-  <div class="pblock">
-    <div class="plabel">或自定义渐变</div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#8fa3c0;">
-        主色 <input type="color" id="bgColorA" value="#0a1428" style="width:42px;height:34px;border:none;border-radius:7px;cursor:pointer;background:transparent;">
-      </label>
-      <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:#8fa3c0;">
-        辅色 <input type="color" id="bgColorB" value="#060c18" style="width:42px;height:34px;border:none;border-radius:7px;cursor:pointer;background:transparent;">
-      </label>
-      <button class="mbtn ghost" id="applyGradBgBtn" style="height:34px;padding:0 14px;font-size:12.5px;">应用渐变</button>
-    </div>
-  </div>
-  <div class="pblock">
-    <div class="plabel">明暗模式</div>
-    <div class="seg-row" id="customBgLightRow">
-      <button class="seg-btn active" data-val="dark">深色（浅笔）</button>
-      <button class="seg-btn" data-val="light">浅色（深笔）</button>
-    </div>
-  </div>
-  <button class="mbtn ghost" id="clearCustomBgBtn" style="width:100%;height:38px;font-size:12.5px;color:#fca5a5;">🗑 清除自定义背景</button>
-  <div class="tip-line" style="margin-top:10px;">
-    图片会自动压缩后保存在本机，<b>下次启动自动恢复</b>。
-  </div>
-</div>
+      <p style="font-size:12px;color:#8fa3c0;margin-bottom:12px;">画布背景</p>
+      <div class="bg-row" id="bgRow"></div>
 
       <p style="font-size:12px;color:#8fa3c0;margin:20px 0 12px;">图形吸附</p>
       <div class="seg-row" id="snapToggleRow" style="margin-bottom:12px;">
@@ -1692,10 +1647,7 @@
       <p style="margin-top:12px;"><b>选择与调整</b></p>
       <p>· 选中图形后，图形下方出现标签：播放 / 重置 / 边框 / 填充 / 参数 / 清晰 / 视频 / 置顶 / 克隆 / 组合 / 删除（部分按钮仅对特定对象显示）。</p>
       <p>· 拖动图形可移动；拖动控制点可缩放；拖动上方旋转柄可旋转；拖动顶点可改变线段 / 折线形状。</p>
-<p>· 框选或按住 <span class="kbd">Shift</span> 点击可加选/减选；<span class="kbd">Ctrl</span>+<span class="kbd">A</span> 全选。</p>
-<p>· <b>复制拖动</b>：按住 <span class="kbd">Ctrl</span> 再拖动图形（或选区），会<b>复制一份并跟随拖动</b>，原图形留在原地。</p>
-<p>· <b>锁定方向复制</b>：按住 <span class="kbd">Ctrl</span>+<span class="kbd">Shift</span> 拖动，复制出的图形只会<b>水平或竖直</b>移动（按拖动方向自动选择）。</p>
-<p>· <b>复制/粘贴</b>：<span class="kbd">Ctrl</span>+<span class="kbd">C</span> 复制选中图形，<span class="kbd">Ctrl</span>+<span class="kbd">V</span> 粘贴（每次粘贴自动错开 20px，不会重叠）。</p>
+      <p>· 框选或按住 <span class="kbd">Ctrl</span> / <span class="kbd">Shift</span> 可多选；<span class="kbd">Ctrl</span>+<span class="kbd">A</span> 全选。</p>
       <p>· <b>克隆</b>：先选中一个或多个图形，点「克隆」开启克隆模式，再拖动其中任意一个被选中的图形，整个选区会一起复制并跟着手指 / 鼠标拖动；原图形留在原地不动。</p>
       <p>· <b>置顶</b>：把选中图形移到当前页最上层。</p>
 
@@ -1711,8 +1663,7 @@
       <p>· 「参数」面板里可调动画周期、振幅、角度、质量比等图形参数。</p>
 
       <p style="margin-top:12px;"><b>组合与图形库</b></p>
-<p>· <b>组合</b>：框选或按住 <span class="kbd">Shift</span> 多选两个以上图形后，
-   点「组合」（或按 <span class="kbd">Ctrl</span>+<span class="kbd">G</span>）即可把它们打包成一个新图形，可命名、生成图标、选择类别。</p>
+<p>· <b>组合</b>：框选或按住 <span class="kbd">Ctrl</span> / <span class="kbd">Shift</span> 多选两个以上图形后，点「组合」（或按 <span class="kbd">Ctrl</span>+<span class="kbd">G</span>）即可把它们打包成一个新图形，可命名、生成图标、选择类别。</p>
 <p>· 组合结果保存在程序目录下的 <b>custom-shapes.json</b>，关闭后重启仍然可用。</p>
 <p>· <b>图形库管理</b>：菜单 →「图形库管理」（或 <span class="kbd">Ctrl</span>+<span class="kbd">L</span>）。可用类别下拉栏筛选图形，<b>只有自定义（组合）图形能被勾选删除</b>；内置 / 动画图形无法删除，但可以点右侧的<b>眼睛按钮隐藏</b>——隐藏状态会被<b>永久记住</b>，重启后依然保持隐藏，再点一次即可恢复显示。</p>
       <p>· 画布上正在使用被删除图形的对象会一并清理，可用 <span class="kbd">Ctrl</span>+<span class="kbd">Z</span> 撤销。</p>
@@ -1741,29 +1692,22 @@
 
       <p style="margin-top:12px;"><b>设置与快捷键</b></p>
       <p>· 设置里可切换画布背景、开启 / 关闭吸附并调半径、指定导出保存位置。</p>
- <p>
-  <span class="kbd">Ctrl</span>+<span class="kbd">Z</span> 撤销 ·
-  <span class="kbd">Ctrl</span>+<span class="kbd">Shift</span>+<span class="kbd">Z</span> 重做 ·
-  <span class="kbd">Ctrl</span>+<span class="kbd">A</span> 全选 ·
-  <span class="kbd">Ctrl</span>+<span class="kbd">C</span> 复制 ·
-  <span class="kbd">Ctrl</span>+<span class="kbd">V</span> 粘贴 ·
-  <span class="kbd">Ctrl</span>+<span class="kbd">G</span> 组合 ·
-  <span class="kbd">Ctrl</span>+<span class="kbd">L</span> 图形库 ·
-  <span class="kbd">Ctrl</span>+<span class="kbd">D</span> 复制选中并偏移 20px ·
-  <span class="kbd">Del</span> 删除
-</p>
-<p>
-  <span class="kbd">空格</span> 播放 / 暂停全部动画 ·
-  <span class="kbd">R</span> 动画归零 ·
-  <span class="kbd">Alt</span> 拖动时临时关闭吸附 ·
-  <span class="kbd">Esc</span> 取消选中 / 关闭弹窗 ·
-  方向键移动选中图形
-</p>
-<p>
-  <span class="kbd">Ctrl</span>+左键拖动 复制拖动 ·
-  <span class="kbd">Ctrl</span>+<span class="kbd">Shift</span>+左键拖动 复制并锁定水平/竖直 ·
-  <span class="kbd">Shift</span>+点击 加选/减选
-</p>
+      <p>
+        <span class="kbd">Ctrl</span>+<span class="kbd">Z</span> 撤销 ·
+        <span class="kbd">Ctrl</span>+<span class="kbd">Shift</span>+<span class="kbd">Z</span> 重做 ·
+        <span class="kbd">Ctrl</span>+<span class="kbd">A</span> 全选 ·
+        <span class="kbd">Ctrl</span>+<span class="kbd">G</span> 组合 ·
+        <span class="kbd">Ctrl</span>+<span class="kbd">L</span> 图形库 ·
+<span class="kbd">Ctrl</span>+<span class="kbd">D</span> 复制选中并偏移 20px ·
+        <span class="kbd">Del</span> 删除
+      </p>
+      <p>
+        <span class="kbd">空格</span> 播放 / 暂停全部动画 ·
+        <span class="kbd">R</span> 动画归零 ·
+        <span class="kbd">Alt</span> 拖动时临时关闭吸附 ·
+        <span class="kbd">Esc</span> 取消选中 / 关闭弹窗 ·
+        方向键移动选中图形
+      </p>
 
 <p style="margin-top:12px;color:#8fa3c0;font-size:12.5px;">
   图形分类：基础、力学、振动与波、光学、电磁、文字、简笔画、动画、近代物理。<br>
@@ -2031,120 +1975,9 @@
 <script src="license.js"></script>
 
 <script src="app.js"></script>
-<script>
-/* ================ 悬浮球：拖动 / 隐藏工具栏 ================ */
-(function initFloatingBall() {
-  if (document.getElementById('__pb_ball')) return;
 
-  const ball = document.createElement('div');
-  ball.id = '__pb_ball';
-  ball.title = '单击：显示/隐藏工具栏  ·  拖动：移动位置';
-  ball.innerHTML = `
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-         stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px;">
-      <path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/>
-    </svg>`;
-  ball.style.cssText = `
-    position:fixed; z-index:999999; left:auto; right:24px; top:50%;
-    width:56px; height:56px; border-radius:50%;
-    background:linear-gradient(135deg,#38bdf8,#818cf8);
-    box-shadow:0 6px 24px rgba(56,189,248,.55), 0 0 0 2px rgba(255,255,255,.15) inset;
-    display:flex; align-items:center; justify-content:center;
-    color:#fff; cursor:grab; user-select:none; touch-action:none;
-    transition:transform .15s, box-shadow .2s, opacity .25s;
-  `;
-  document.body.appendChild(ball);
 
-  // 恢复位置
-  try {
-    const saved = JSON.parse(localStorage.getItem('pb_ball_pos') || 'null');
-    if (saved && typeof saved.left === 'number') {
-      ball.style.left = saved.left + 'px';
-      ball.style.top = saved.top + 'px';
-      ball.style.right = 'auto';
-    }
-  } catch (e) {}
 
-  let dragging = false, moved = false, startX = 0, startY = 0, startLeft = 0, startTop = 0;
-
-  ball.addEventListener('pointerdown', e => {
-    if (e.button !== 0) return;
-    dragging = true; moved = false;
-    startX = e.clientX; startY = e.clientY;
-    const rect = ball.getBoundingClientRect();
-    startLeft = rect.left; startTop = rect.top;
-    ball.setPointerCapture(e.pointerId);
-    ball.style.transition = 'none';
-    ball.style.cursor = 'grabbing';
-    ball.style.transform = 'scale(.94)';
-  });
-
-  ball.addEventListener('pointermove', e => {
-    if (!dragging) return;
-    const dx = e.clientX - startX, dy = e.clientY - startY;
-    if (!moved && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) moved = true;
-    if (!moved) return;
-    let nl = startLeft + dx, nt = startTop + dy;
-    nl = Math.max(8, Math.min(window.innerWidth - 64, nl));
-    nt = Math.max(8, Math.min(window.innerHeight - 64, nt));
-    ball.style.left = nl + 'px';
-    ball.style.top = nt + 'px';
-    ball.style.right = 'auto';
-  });
-
-  ball.addEventListener('pointerup', e => {
-    if (!dragging) return;
-    dragging = false;
-    ball.style.transition = '';
-    ball.style.cursor = 'grab';
-    ball.style.transform = '';
-
-    if (moved) {
-      try {
-        const rect = ball.getBoundingClientRect();
-        localStorage.setItem('pb_ball_pos', JSON.stringify({ left: rect.left, top: rect.top }));
-      } catch (err) {}
-      return;
-    }
-
-    // 单击：切换工具栏显示/隐藏
-    toggleToolbar();
-  });
-
-  ball.addEventListener('pointercancel', () => {
-    dragging = false;
-    ball.style.transition = '';
-    ball.style.transform = '';
-  });
-
-  // --- 工具栏显隐逻辑 ---
-  let toolbarHidden = false;
-  const TOOLBAR_SELECTORS = [
-    '.dock', '.corner-bl', '.corner-br',
-    '.panel', '.sub-panel', '.sel-bar',
-    '.thumb-panel', '.menu-pop'
-  ];
-
-  function toggleToolbar() {
-    toolbarHidden = !toolbarHidden;
-    TOOLBAR_SELECTORS.forEach(sel => {
-      document.querySelectorAll(sel).forEach(el => {
-        el.style.transition = 'opacity .22s';
-        el.style.opacity = toolbarHidden ? '0' : '';
-        el.style.pointerEvents = toolbarHidden ? 'none' : '';
-        if (!toolbarHidden) {
-          el.style.visibility = '';
-        } else {
-          setTimeout(() => {
-            if (toolbarHidden) el.style.visibility = 'hidden';
-          }, 230);
-        }
-      });
-    });
-    ball.style.opacity = toolbarHidden ? '0.4' : '';
-  }
-})();
-</script>
 
 </body>
 </html>
