@@ -639,7 +639,7 @@ function showActivationUI(message) {
 }
 
 /* ===== 8. 对外接口 ===== */
-const licenseAPI = {
+window.__pbLicense = {
   API_BASE: API_BASE,
   ensureActivated: ensureActivated,
   getToken: getToken,
@@ -649,13 +649,6 @@ const licenseAPI = {
   check: async function () { return !!(await readAuth()); },
   showActivationUI: function (msg) { return showActivationUI(msg); }
 };
-
-// 【修补】防止控制台直接覆盖或删除该对象
-Object.defineProperty(window, '__pbLicense', {
-  value: licenseAPI,
-  writable: false,
-  configurable: false
-});
 
 /* 把文件读写暴露给 app.js 复用 */
 window.__pbFS = {
